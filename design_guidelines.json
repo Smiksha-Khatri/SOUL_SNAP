@@ -1,0 +1,94 @@
+{
+  "project_name": "Soul Snap",
+  "theme": "Light",
+  "archetype": "Archetype 1 (Organic & Earthy) with pastel influences",
+  "mood": "Calming, peaceful, journaling feel, emotional comfort",
+  "colors": {
+    "background": "#F9F8F6",
+    "surface": "#FFFFFF",
+    "primary": "#8EACCD",
+    "primary_foreground": "#FFFFFF",
+    "secondary": "#D4E2D4",
+    "secondary_foreground": "#2C3E50",
+    "accent": "#F2D8D8",
+    "accent_foreground": "#2C3E50",
+    "text_primary": "#2D3748",
+    "text_secondary": "#718096",
+    "border": "#E2E8F0",
+    "success": "#9DC183",
+    "warning": "#F6E0B5",
+    "destructive": "#E8B4B8",
+    "emotion_tags": {
+      "joy": "#F6E0B5",
+      "calm": "#D4E2D4",
+      "sadness": "#8EACCD",
+      "anger": "#E8B4B8",
+      "anxiety": "#E2D4F0"
+    }
+  },
+  "typography": {
+    "heading_font": "Manrope",
+    "body_font": "Figtree",
+    "h1": "text-4xl sm:text-5xl lg:text-6xl tracking-tighter font-medium",
+    "h2": "text-2xl sm:text-3xl lg:text-4xl tracking-tight font-medium",
+    "h3": "text-xl sm:text-2xl tracking-tight",
+    "body": "text-base leading-relaxed",
+    "label": "text-xs tracking-[0.2em] uppercase font-semibold text-text_secondary"
+  },
+  "layout_and_spacing": {
+    "philosophy": "Generous spacing. Allow the mind to breathe. Use p-8 to p-12 for containers.",
+    "grid_system": "The 'Control Room' Grid but soft. grid-cols-1 md:grid-cols-3 lg:grid-cols-4 with gap-6.",
+    "border_radius": "rounded-2xl or rounded-3xl to feel tactile and safe. No sharp edges.",
+    "surfaces": "Flat Solid surfaces. Do NOT use glassmorphism for health data to avoid visual refraction. Subtle borders (border-black/5) with extremely diffuse shadows (shadow-sm)."
+  },
+  "components": {
+    "cards": "bg-white border border-border/50 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] rounded-3xl p-6 transition-all hover:shadow-md",
+    "buttons": "rounded-full px-6 py-2.5 font-medium transition-all focus:ring-2 focus:ring-primary/30",
+    "inputs": "bg-background border-border rounded-xl focus:ring-2 focus:ring-primary/20 p-4",
+    "charts": "Recharts. Use simple area charts with gradients. Remove grids and axis lines for a cleaner look.",
+    "chat_bubbles": "User: bg-primary text-white rounded-3xl rounded-tr-sm. AI: bg-secondary text-secondary_foreground rounded-3xl rounded-tl-sm."
+  },
+  "motion_and_interaction": {
+    "hover_states": "Soft lifts (-translate-y-1) and shadow expansion. Elements should feel responsive but not erratic.",
+    "transitions": "transition-all duration-300 ease-out",
+    "page_load": "Fade in and gentle slide up (framer-motion). Staggered children for lists."
+  },
+  "media_and_images": {
+    "rules": "Use the provided URLs ONLY. No placeholders.",
+    "images": [
+      {
+        "category": "dashboard_hero_background",
+        "url": "https://images.pexels.com/photos/30887567/pexels-photo-30887567.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "description": "Fluid abstract shapes in green and beige. Use as a soft banner header behind the welcome message."
+      },
+      {
+        "category": "empty_state_timeline",
+        "url": "https://images.pexels.com/photos/29334823/pexels-photo-29334823.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "description": "Sunrise view over a tranquil green field. Use when the user has no entries yet, promoting a fresh start."
+      },
+      {
+        "category": "memory_capsule_cover",
+        "url": "https://images.pexels.com/photos/7605372/pexels-photo-7605372.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "description": "Soothing abstract blue blurred gradient. Use as a background or cover for generated Memory Capsules."
+      },
+      {
+        "category": "auth_background",
+        "url": "https://images.unsplash.com/photo-1763696781519-e74353d50f53?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NDh8MHwxfHNlYXJjaHwxfHxwZWFjZWZ1bCUyMG1vcm5pbmclMjBuYXR1cmV8ZW58MHx8fHwxNzc1MTI3ODQ2fDA&ixlib=rb-4.1.0&q=85",
+        "description": "Misty river and forest background. Use as the side panel image for login/signup."
+      }
+    ],
+    "icons": "lucide-react. Stroke width 1.5 for a delicate, modern feel."
+  },
+  "accessibility_and_testing": {
+    "contrast": "Text over backgrounds must meet APCA guidelines. Ensure tinted text_secondary is dark enough.",
+    "test_ids": "ALL interactive elements must have data-testid. E.g., data-testid='journal-entry-submit-button', data-testid='chat-input-field'."
+  },
+  "specific_instructions_for_main_agent": [
+    "Build a modular dashboard layout: Sidebar for navigation, Main content area with top greeting.",
+    "Dashboard should include: A 'How are you feeling today?' quick entry, a weekly emotional trend chart, and a widget for recent memory capsules.",
+    "Chat Interface: Implement a sliding or modal chat interface that feels like texting a friend, not an enterprise bot.",
+    "Journal Entry: Allow rich text or simple text with a file upload button (lucide-react icons) styled minimally.",
+    "Do NOT use glassmorphism. Use flat solid surfaces with rounded corners and subtle shadows. This is a mental wellness app; clarity and warmth over tech-gloss.",
+    "When displaying the emotion chart, map the emotions to the emotion_tags colors defined in this JSON."
+  ]
+}
