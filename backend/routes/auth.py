@@ -7,6 +7,7 @@ from bson import ObjectId
 import os
 import logging
 import httpx
+from datetime import timedelta
 
 from models.schemas import (
     UserCreate, UserLogin, UserResponse, 
@@ -21,9 +22,11 @@ from services.auth_service import (
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/auth", tags=["Authentication"])
+router = APIRouter(tags=["Authentication"])
 
 def get_db(request: Request):
+    if not hasattr(request.app.state, "db"):
+        raise HTTPException(status_code=500, detail="Database not initialized")
     return request.app.state.db
 
 @router.post("/register")
@@ -156,7 +159,8 @@ async def refresh_token(request: Request, response: Response):
 async def google_auth(auth_data: GoogleAuthRequest, response: Response, request: Request):
     """Handle Google OAuth callback"""
     db = get_db(request)
-    
+    if not os.environ.get("GOOGLE_CLIENT_ID") or not os.environ.get("GOOGLE_CLIENT_SECRET"):
+        raise HTTPException(status_code=500, detail="Google config missing")
     # Exchange code for tokens
     token_url = "https://oauth2.googleapis.com/token"
     token_data = {
@@ -242,7 +246,7 @@ async def forgot_password(data: PasswordResetRequest, request: Request):
     await db.password_reset_tokens.insert_one({
         "user_id": user["_id"],
         "token": token,
-        "expires_at": datetime.now(timezone.utc) + timezone.timedelta(hours=1),
+        "expires_at": datetime.now(timezone.utc) + timedelta(hours=1),
         "used": False,
         "created_at": datetime.now(timezone.utc)
     })

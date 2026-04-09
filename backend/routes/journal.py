@@ -13,7 +13,7 @@ from services.ai_service import analyze_sentiment
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/journal", tags=["Journal"])
+router = APIRouter(tags=["Journal"])
 
 def get_db(request: Request):
     return request.app.state.db

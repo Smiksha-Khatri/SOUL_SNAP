@@ -13,7 +13,7 @@ from services.ai_service import chat_with_ai
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/memories", tags=["Memories"])
+router = APIRouter(tags=["Memories"])
 
 def get_db(request: Request):
     return request.app.state.db

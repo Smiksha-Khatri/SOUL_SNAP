@@ -20,7 +20,7 @@ api.interceptors.response.use(
       originalRequest._retry = true;
       
       try {
-        await api.post('/api/v1/auth/refresh');
+        await api.post('/auth/refresh');
         return api(originalRequest);
       } catch (refreshError) {
         // Redirect to login if refresh fails
@@ -79,20 +79,26 @@ export const mediaApi = {
 // Upload to Cloudinary
 export const uploadToCloudinary = async (file, folder = 'uploads', resourceType = 'image') => {
   const { data: sig } = await mediaApi.getSignature(resourceType, folder);
-  
+
   const formData = new FormData();
   formData.append('file', file);
   formData.append('api_key', sig.api_key);
   formData.append('timestamp', sig.timestamp);
   formData.append('signature', sig.signature);
-  formData.append('folder', sig.folder);
-  
+  formData.append('folder', sig.folder || folder);
+
   const response = await fetch(
     `https://api.cloudinary.com/v1_1/${sig.cloud_name}/${resourceType}/upload`,
     { method: 'POST', body: formData }
   );
-  
-  return response.json();
+
+  const result = await response.json();
+
+  if (!response.ok || result.error) {
+    throw new Error(result.error?.message || `Upload failed (${response.status})`);
+  }
+
+  return result;
 };
 
 export default api;

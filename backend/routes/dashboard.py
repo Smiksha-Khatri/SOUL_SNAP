@@ -13,7 +13,7 @@ from services.ai_service import chat_with_ai
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/dashboard", tags=["Dashboard"])
+router = APIRouter(tags=["Dashboard"])
 
 def get_db(request: Request):
     return request.app.state.db

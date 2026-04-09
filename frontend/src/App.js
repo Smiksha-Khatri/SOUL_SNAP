@@ -14,7 +14,7 @@ import JournalPage from "./pages/JournalPage";
 import ChatPage from "./pages/ChatPage";
 import TimelinePage from "./pages/TimelinePage";
 import InsightsPage from "./pages/InsightsPage";
-
+import ProfilePage from "./pages/ProfilePage";
 import "./App.css";
 
 function App() {
@@ -69,6 +69,14 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+         path="/profile"
+         element={
+         <ProtectedRoute>
+          <ProfilePage />
+          </ProtectedRoute>
+          }
+        />
 
           {/* Catch all */}
           <Route path="*" element={<Navigate to="/" replace />} />

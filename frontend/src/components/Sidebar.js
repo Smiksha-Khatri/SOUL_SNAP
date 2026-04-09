@@ -97,10 +97,13 @@ export default function Sidebar() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56 rounded-xl">
-            <DropdownMenuItem className="rounded-lg">
-              <User className="h-4 w-4 mr-2" />
-              Profile
-            </DropdownMenuItem>
+            <DropdownMenuItem 
+             className="rounded-lg"
+              onClick={() => navigate('/profile')}
+             >
+             <User className="h-4 w-4 mr-2" />
+             Profile
+             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem 
               onClick={handleLogout} 

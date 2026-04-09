@@ -8,7 +8,11 @@ import cloudinary.utils
 import cloudinary.uploader
 from typing import Optional
 import logging
-
+cloudinary.config(
+    cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.getenv("CLOUDINARY_API_KEY"),
+    api_secret=os.getenv("CLOUDINARY_API_SECRET")
+)
 logger = logging.getLogger(__name__)
 
 def init_cloudinary():

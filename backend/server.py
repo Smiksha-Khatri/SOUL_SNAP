@@ -2,17 +2,21 @@
 Soul Snap - Main FastAPI Application
 A personal emotional diary and AI companion
 """
+import os
 from dotenv import load_dotenv
-load_dotenv()
+from pathlib import Path
 
+env_path = Path(__file__).resolve().parent / ".env"
+load_dotenv(dotenv_path=env_path)
+
+print("LOADED CLOUD NAME:", os.getenv("CLOUDINARY_CLOUD_NAME"))
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
-import os
-import logging
-from pathlib import Path
-from datetime import datetime, timezone
 
+import logging
+from datetime import datetime, timezone
+from motor.motor_asyncio import AsyncIOMotorClient
 from routes.auth import router as auth_router
 from routes.journal import router as journal_router
 from routes.chat import router as chat_router
@@ -30,7 +34,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # MongoDB connection
-mongo_url = os.environ['MONGO_URL']
+mongo_url = os.environ.get("MONGO_URL")
 client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
 
@@ -55,12 +59,12 @@ app.add_middleware(
 )
 
 # Include routers with /api prefix
-app.include_router(auth_router, prefix="/api")
-app.include_router(journal_router, prefix="/api")
-app.include_router(chat_router, prefix="/api")
-app.include_router(memories_router, prefix="/api")
-app.include_router(dashboard_router, prefix="/api")
-app.include_router(media_router, prefix="/api")
+app.include_router(auth_router, prefix="/api/auth")
+app.include_router(journal_router, prefix="/api/v1/journal")
+app.include_router(chat_router, prefix="/api/v1/chat")
+app.include_router(memories_router, prefix="/api/v1/memories")
+app.include_router(dashboard_router, prefix="/api/v1/dashboard")
+app.include_router(media_router, prefix="/api/v1/media")
 
 @app.get("/api")
 async def root():
@@ -71,10 +75,10 @@ async def health_check():
     return {"status": "healthy", "timestamp": datetime.now(timezone.utc).isoformat()}
 
 @app.on_event("startup")
-async def startup_event():
-    """Initialize services and seed data on startup"""
-    logger.info("Starting Soul Snap API...")
-    
+async def startup():
+    client = AsyncIOMotorClient(mongo_url)
+    app.state.db = client[os.environ.get("DB_NAME")]
+
     # Initialize Cloudinary
     init_cloudinary()
     
@@ -118,7 +122,7 @@ async def seed_admin():
         logger.info(f"Admin password updated: {admin_email}")
     
     # Write credentials to test file
-    memory_dir = Path("/app/memory")
+    memory_dir = Path(__file__).parent / "memory"
     memory_dir.mkdir(exist_ok=True)
     
     with open(memory_dir / "test_credentials.md", "w") as f:

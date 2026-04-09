@@ -9,7 +9,7 @@ from services.cloudinary_service import generate_upload_signature, delete_media
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/media", tags=["Media"])
+router = APIRouter(tags=["Media"])
 
 def get_db(request: Request):
     return request.app.state.db
