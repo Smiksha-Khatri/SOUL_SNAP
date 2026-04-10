@@ -97,8 +97,34 @@ async def login(credentials: UserLogin, response: Response, request: Request):
     access_token = create_access_token(user_id, email)
     refresh_token = create_refresh_token(user_id)
     
-    response.set_cookie(key="access_token", value=access_token, httponly=True, secure=False, samesite="lax", max_age=900, path="/")
-    response.set_cookie(key="refresh_token", value=refresh_token, httponly=True, secure=False, samesite="lax", max_age=604800, path="/")
+    remember = getattr(credentials, "remember_me", False)
+
+    if remember:
+        access_age = 60 * 60 * 24 * 7   # 7 days
+        refresh_age = 60 * 60 * 24 * 30 # 30 days
+    else:
+        access_age = 60 * 15            # 15 min
+        refresh_age = 60 * 60 * 24      # 1 day
+
+    response.set_cookie(
+        key="access_token",
+        value=access_token,
+        httponly=True,
+        secure=False,
+        samesite="lax",
+        max_age=access_age,
+        path="/"
+    )  
+
+    response.set_cookie(
+        key="refresh_token",
+        value=refresh_token,
+        httponly=True,
+        secure=False,
+        samesite="lax",
+        max_age=refresh_age,
+        path="/"
+    )
     
     return {
         "_id": user_id,
@@ -163,11 +189,13 @@ async def google_auth(auth_data: GoogleAuthRequest, response: Response, request:
         raise HTTPException(status_code=500, detail="Google config missing")
     # Exchange code for tokens
     token_url = "https://oauth2.googleapis.com/token"
+    print("CODE:", auth_data.code)
+    print("REDIRECT:", "http://localhost:3000/auth/google/callback")
     token_data = {
         "code": auth_data.code,
         "client_id": os.environ.get("GOOGLE_CLIENT_ID"),
         "client_secret": os.environ.get("GOOGLE_CLIENT_SECRET"),
-        "redirect_uri": auth_data.redirect_uri,
+        "redirect_uri": "http://localhost:3000/auth/google/callback",
         "grant_type": "authorization_code"
     }
     

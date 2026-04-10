@@ -7,7 +7,7 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Eye, EyeOff, Mail, Lock, Loader2 } from 'lucide-react';
 
-const GOOGLE_CLIENT_ID = '1004503062390-1ns6qub31810u8c6l1a531pc8uqt7jlk.apps.googleusercontent.com';
+const GOOGLE_CLIENT_ID = '730162932226-ku2jfng5avc4ffqbq7srdhjcdgo7d20e.apps.googleusercontent.com';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -15,7 +15,7 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  
+  const [rememberMe, setRememberMe] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -26,7 +26,7 @@ export default function LoginPage() {
     setError('');
     setLoading(true);
 
-    const result = await login(email, password);
+    const result = await login(email, password, rememberMe);
     
     if (result.success) {
       navigate(from, { replace: true });
@@ -40,7 +40,15 @@ export default function LoginPage() {
   const handleGoogleLogin = () => {
     const redirectUri = `${window.location.origin}/auth/google/callback`;
     const scope = 'email profile';
-    const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=${encodeURIComponent(scope)}&access_type=offline&prompt=consent`;
+     const googleAuthUrl =
+    `https://accounts.google.com/o/oauth2/v2/auth` +
+    `?client_id=${GOOGLE_CLIENT_ID}` +
+    `&redirect_uri=${encodeURIComponent(redirectUri)}` +
+    `&response_type=code` +
+    `&scope=${encodeURIComponent(scope)}` +
+    `&access_type=offline` +
+    `&prompt=consent` +
+    `&include_granted_scopes=true`;
     window.location.href = googleAuthUrl;
   };
 
@@ -155,6 +163,14 @@ export default function LoginPage() {
                 'Sign In'
               )}
             </Button>
+            <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+            />
+  <label>Remember Me</label>
+</div>
           </form>
 
           <div className="relative">

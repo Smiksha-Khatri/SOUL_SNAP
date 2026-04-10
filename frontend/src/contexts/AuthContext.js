@@ -43,11 +43,11 @@ export const AuthProvider = ({ children }) => {
     checkAuth();
   }, [checkAuth]);
 
-  const login = async (email, password) => {
+  const login = async (email, password, rememberMe) => {
     try {
       const response = await axios.post(
         `${API_URL}/api/auth/login`,
-        { email, password },
+        { email, password, remember_me: rememberMe },
         { withCredentials: true }
       );
       setUser(response.data);

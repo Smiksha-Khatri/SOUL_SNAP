@@ -10,7 +10,7 @@ from abc import ABC, abstractmethod
 from typing import List, Dict, Optional
 import json
 import logging
-
+import requests
 logger = logging.getLogger(__name__)
 
 # Keyword-based sentiment analysis as fallback when AI is unavailable
@@ -290,6 +290,61 @@ Return ONLY valid JSON, no markdown or explanation."""
                 "summary": "Unable to analyze sentiment"
             }
 
+# ADD THIS CLASS BELOW AnthropicProvider
+
+class GroqProvider(AIProvider):
+    """Groq LLaMA provider"""
+    
+    def __init__(self, api_key: str, model: str = "llama3-70b-8192"):
+        self.api_key = api_key
+        self.model = model
+        self.base_url = "https://api.groq.com/openai/v1"
+    
+    async def chat(self, messages: List[Dict], system_prompt: str = None) -> str:
+        url = f"{self.base_url}/chat/completions"
+        
+        formatted_messages = []
+        if system_prompt:
+            formatted_messages.append({"role": "system", "content": system_prompt})
+        
+        for msg in messages:
+            formatted_messages.append({
+                "role": msg["role"],
+                "content": msg["content"]
+            })
+        
+        headers = {
+            "Authorization": f"Bearer {self.api_key}",
+            "Content-Type": "application/json"
+        }
+        
+        payload = {
+            "model": self.model,
+            "messages": formatted_messages
+        }
+        
+        async with httpx.AsyncClient(timeout=60.0) as client:
+            response = await client.post(url, json=payload, headers=headers)
+            
+            if response.status_code != 200:
+                raise Exception("Groq API error")
+            
+            data = response.json()
+            return data["choices"][0]["message"]["content"]
+    
+    async def analyze_sentiment(self, text: str) -> Dict:
+        prompt = f"""Analyze the emotional sentiment of this text and return JSON:
+primary_emotion, intensity (0-1), secondary_emotions, summary
+
+Text: "{text}"
+Return ONLY JSON."""
+        
+        response = await self.chat([{"role": "user", "content": prompt}])
+        
+        try:
+            return json.loads(response)
+        except:
+            return fallback_sentiment_analysis(text)
 class AIService:
     """
     AI Service Factory - Manages AI provider instances
@@ -309,6 +364,10 @@ class AIService:
                 api_key = os.environ.get("GEMINI_API_KEY")
                 model = os.environ.get("GEMINI_MODEL", "gemini-2.0-flash")
                 cls._instance = GeminiProvider(api_key, model)
+            elif provider == "groq":
+                api_key = os.environ.get("GROQ_API_KEY")
+                model = os.environ.get("GROQ_MODEL", "llama-3.3-70b-versatile")
+                cls._instance = GroqProvider(api_key, model)    
             elif provider == "openai":
                 api_key = os.environ.get("OPENAI_API_KEY")
                 model = os.environ.get("OPENAI_MODEL", "gpt-4o")

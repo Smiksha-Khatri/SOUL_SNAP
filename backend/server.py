@@ -9,7 +9,6 @@ from pathlib import Path
 env_path = Path(__file__).resolve().parent / ".env"
 load_dotenv(dotenv_path=env_path)
 
-print("LOADED CLOUD NAME:", os.getenv("CLOUDINARY_CLOUD_NAME"))
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
