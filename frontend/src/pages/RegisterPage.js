@@ -7,7 +7,7 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Eye, EyeOff, Mail, Lock, User, Loader2 } from 'lucide-react';
 
-const GOOGLE_CLIENT_ID = '1004503062390-1ns6qub31810u8c6l1a531pc8uqt7jlk.apps.googleusercontent.com';
+const GOOGLE_CLIENT_ID = '730162932226-ku2jfng5avc4ffqbq7srdhjcdgo7d20e.apps.googleusercontent.com';
 
 export default function RegisterPage() {
   const [name, setName] = useState('');

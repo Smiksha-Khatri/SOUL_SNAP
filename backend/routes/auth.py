@@ -282,7 +282,9 @@ async def forgot_password(data: PasswordResetRequest, request: Request):
     # Log reset link (in production, send email)
     frontend_url = os.environ.get("FRONTEND_URL", "http://localhost:3000")
     reset_link = f"{frontend_url}/reset-password?token={token}"
-    logger.info(f"Password reset link for {email}: {reset_link}")
+    from services.email_service import send_reset_email
+
+    send_reset_email(email, reset_link)
     
     return {"message": "If the email exists, a reset link has been sent"}
 
@@ -298,7 +300,10 @@ async def reset_password(data: PasswordResetConfirm, request: Request):
     if not token_doc:
         raise HTTPException(status_code=400, detail="Invalid or expired reset token")
     
-    if datetime.now(timezone.utc) > token_doc["expires_at"]:
+    expires_at = token_doc["expires_at"]
+    if expires_at.tzinfo is None:
+        expires_at = expires_at.replace(tzinfo=timezone.utc)
+    if datetime.now(timezone.utc) > expires_at:
         raise HTTPException(status_code=400, detail="Reset token has expired")
     
     # Update password

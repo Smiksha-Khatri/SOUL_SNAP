@@ -15,6 +15,8 @@ import ChatPage from "./pages/ChatPage";
 import TimelinePage from "./pages/TimelinePage";
 import InsightsPage from "./pages/InsightsPage";
 import ProfilePage from "./pages/ProfilePage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
 import "./App.css";
 
 function App() {
@@ -77,7 +79,11 @@ function App() {
           </ProtectedRoute>
           }
         />
-
+        <Route 
+        path="/forgot-password" 
+        element={<ForgotPasswordPage />} 
+        />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
           {/* Catch all */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
