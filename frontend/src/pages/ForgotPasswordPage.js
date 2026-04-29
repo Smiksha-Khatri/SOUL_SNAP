@@ -18,7 +18,7 @@ export default function ForgotPasswordPage() {
 
     try {
       await axios.post(
-        "http://localhost:8000/api/auth/forgot-password",
+        "http://http://localhost:8000/api/auth/forgot-password",
         { email }
       );
       setMessage("Reset link sent! Check your mail");

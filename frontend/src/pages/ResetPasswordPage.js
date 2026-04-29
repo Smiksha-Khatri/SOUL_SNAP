@@ -7,7 +7,7 @@ import { Label } from "../components/ui/label";
 import { Button } from "../components/ui/button";
 import { Lock, Loader2, CheckCircle, XCircle } from "lucide-react";
 
-const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:8000";
+const API_BASE = process.env.REACT_APP_API_URL || "http://http://localhost:8000";
 
 export default function ResetPasswordPage() {
   const [searchParams] = useSearchParams();
