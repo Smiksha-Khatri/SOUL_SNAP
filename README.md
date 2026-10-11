@@ -61,11 +61,7 @@ Soul Snap bridges the gap between traditional journaling and modern AI by making
 
 ---
 
-## 🔗 Live Access
 
-Access the application here:
-
----
 
 ## 💡 Highlights
 
